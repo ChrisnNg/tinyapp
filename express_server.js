@@ -49,3 +49,21 @@ app.post("/urls", (req, res) => {
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
 });
 
+const getRandomInt = function(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+};
+
+const generateRandomString = function() {
+  let randomString = "";
+  let arrayAlphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'o', 'm'];
+  let i = 0;
+
+  while (i < 6) {
+    randomString += arrayAlphabet[getRandomInt(14)];
+    i++;
+  }
+  
+  return randomString;
+};
+
+console.log(generateRandomString);
