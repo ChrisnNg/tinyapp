@@ -46,16 +46,16 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
+  let longURL = "";
+  !longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : longURL = req.body.longURL;//prefix longURL with http:// if not present
   let shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
+  console.log(urlDatabase);
+  urlDatabase[shortURL] = longURL;
   res.redirect(`/urls/${shortURL}`);
 });
 
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL];
-  if (!longURL.startsWith('http://')) {
-    longURL = 'http://' + longURL;
-  }
   res.redirect(307, longURL);//http must be prepended in the browser
 });
 
