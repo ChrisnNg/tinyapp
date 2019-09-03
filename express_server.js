@@ -47,7 +47,8 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
   let longURL = "";
-  !longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : longURL = req.body.longURL;//prefix longURL with http:// if not present
+  !longURL.startsWith('www.') ? longURL = 'www.' + req.body.longURL : longURL = req.body.longURL;//prefix longURL with www. if not present
+  !longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : false;//prefix longURL with http:// if not present
   let shortURL = generateRandomString();
   console.log(urlDatabase);
   urlDatabase[shortURL] = longURL;
@@ -56,7 +57,12 @@ app.post("/urls", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL];
-  res.redirect(307, longURL);//http must be prepended in the browser
+  res.redirect(307, longURL);
+});
+
+app.post("/urls/:shortURL/delete", (req, res) => {
+  delete urlDatabase[req.params.shortURL];
+  res.redirect(301, "/localhost:8080/urls/");
 });
 
 const getRandomInt = function(max) {
@@ -65,11 +71,11 @@ const getRandomInt = function(max) {
 
 const generateRandomString = function() {
   let randomString = "";
-  let arrayAlphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'o', 'm'];
+  let arrayCharc = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
   let i = 0;
 
   while (i < 6) {
-    randomString += arrayAlphabet[getRandomInt(14)];
+    randomString += arrayCharc[getRandomInt(62)];
     i++;
   }
   return randomString;
