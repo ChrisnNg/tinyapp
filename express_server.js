@@ -62,6 +62,12 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect(301, "//localhost:8080/urls/");
 });
 
+app.post("/urls/:shortURL/edit", (req, res) => {
+  console.log(req.params);
+  // urlDatabase[req.params.shortURL] =
+  res.redirect(301, "//localhost:8080/urls/");
+});
+
 const getRandomInt = function(max) {
   return Math.floor(Math.random() * Math.floor(max));
 };
