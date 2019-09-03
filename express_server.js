@@ -62,9 +62,8 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect(301, "//localhost:8080/urls/");
 });
 
-app.post("/urls/:shortURL/edit", (req, res) => {
-  console.log(req.params);
-  // urlDatabase[req.params.shortURL] =
+app.post("/urls/:shortURL", (req, res) => {
+  urlDatabase[req.params.shortURL] = req.body.newLongURL;
   res.redirect(301, "//localhost:8080/urls/");
 });
 
