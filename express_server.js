@@ -52,7 +52,10 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  let longURL = urlDatabase[req.params.shortURL];
+  if (!longURL.startsWith('http://')) {
+    longURL = 'http://' + longURL;
+  }
   res.redirect(307, longURL);//http must be prepended in the browser
 });
 
