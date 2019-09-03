@@ -35,9 +35,6 @@ app.get("/urls.json", (req, res) => {
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
-app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
-});
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]};
@@ -47,8 +44,7 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
   let longURL = "";
-  !longURL.startsWith('www.') ? longURL = 'www.' + req.body.longURL : longURL = req.body.longURL;//prefix longURL with www. if not present
-  !longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : false;//prefix longURL with http:// if not present
+  !req.body.longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : longURL = req.body.longURL;//prefix longURL with http:// if not present
   let shortURL = generateRandomString();
   console.log(urlDatabase);
   urlDatabase[shortURL] = longURL;
@@ -62,7 +58,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
-  res.redirect(301, "/localhost:8080/urls/");
+  res.redirect(301, "//localhost:8080/urls/");
 });
 
 const getRandomInt = function(max) {
