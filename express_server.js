@@ -13,6 +13,28 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// Create
+app.post("/urls", (req, res) => {
+  console.log(req.body);  // Log the POST request body to the console
+  let longURL = "";
+  !req.body.longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : longURL = req.body.longURL;//prefix longURL with http:// if not present
+  let shortURL = generateRandomString();
+  console.log(urlDatabase);
+  urlDatabase[shortURL] = longURL;
+  console.log(urlDatabase);
+  res.redirect(`/urls/${shortURL}`);
+});
+
+app.post("/login", (req, res) => {
+  res.cookie('username', req.body.username);
+  res.redirect(301, "//localhost:8080/urls/");
+});
+
+// Read
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
+});
+
 app.get("/urls/new", (req, res) => {
   let templateVars = { username: req.cookies['username'] };
   res.render("urls_new", templateVars);
@@ -30,10 +52,6 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
-
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
@@ -47,34 +65,22 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  let longURL = "";
-  !req.body.longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : longURL = req.body.longURL;//prefix longURL with http:// if not present
-  let shortURL = generateRandomString();
-  console.log(urlDatabase);
-  urlDatabase[shortURL] = longURL;
-  console.log(urlDatabase);
-  res.redirect(`/urls/${shortURL}`);
-});
-
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL];
   res.redirect(307, longURL);
 });
 
+// Update
+app.post("/urls/:shortURL", (req, res) => {
+  const shortURL = req.params.shortURL;
+  const newLongURL = req.body.newLongURL;
+  urlDatabase[shortURL] = newLongURL;
+  res.redirect(301, "//localhost:8080/urls/");
+});
+
+//Delete
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
-  res.redirect(301, "//localhost:8080/urls/");
-});
-
-app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.newLongURL;
-  res.redirect(301, "//localhost:8080/urls/");
-});
-
-app.post("/login", (req, res) => {
-  res.cookie('username', req.body.username);
   res.redirect(301, "//localhost:8080/urls/");
 });
 
@@ -82,7 +88,6 @@ app.post("/logout", (req, res) => {
   res.clearCookie('username');
   res.redirect(301, "//localhost:8080/urls/");
 });
-
 const getRandomInt = function(max) {
   return Math.floor(Math.random() * Math.floor(max));
 };
@@ -93,7 +98,7 @@ const generateRandomString = function() {
   let i = 0;
 
   while (i < 6) {
-    randomString += arrayCharc[getRandomInt(62)];
+    randomString += arrayCharc[getRandomInt(61)];
     i++;
   }
   return randomString;
