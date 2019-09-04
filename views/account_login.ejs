@@ -10,10 +10,14 @@
   <header>
     <% include partials/_header.ejs %>
   </header>
+  <h3 style="margin-top: 15px; margin-left: 15px;"><b>Login</b></h3>
   <form method="POST" action="/login">
-    <input type="text" type="email" name="email" placeholder="Email">
-    <input type="text" type="password" name="password" placeholder="Password">
-    <button type="submit" class="btn-success btn-outline-dark">Login</button>
+    <h6 style="margin-left: 15px;">Email address</h6>
+    <input style="margin-left: 15px;" type="text" type="email" name="email" placeholder=" Email">
+    <h6 style="margin-top: 10px; margin-left: 15px;"">Password</h6>
+    <input style="margin-left: 15px;" type="text" type="password" name="password" placeholder=" Password">
+    <div></div>
+    <button type="submit" class="btn-primary" style="margin-top: 15px; margin-left: 15px;"">Login</button>
   </form>
 
   <!-- Bootstrap JS -->
