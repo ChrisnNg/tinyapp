@@ -42,13 +42,18 @@ app.post("/login", (req, res) => {
 
 app.post("/register", (req, res) => {
   const id = generateRandomString();
-  users[id] = {
-    id,
-    email: req.body.email,
-    password: req.body.password
-  };
-  res.cookie('user_id', id);
-  res.redirect(301, "/urls");
+  if (!req.body.email && !req.body.password) {
+    res.sendStatus(400);
+  }
+  if (emailIsUnique(req.body.email)) {
+    users[id] = {
+      id,
+      email: req.body.email,
+      password: req.body.password
+    };
+    res.cookie('user_id', id);
+    res.redirect(301, "/urls");
+  } else res.sendStatus(400);
 });
 // Read
 app.listen(PORT, () => {
@@ -130,4 +135,14 @@ const generateRandomString = function() {
     i++;
   }
   return randomString;
+};
+
+const emailIsUnique = function(email) {
+  for (let ids in users) {
+    if (users[ids]['email'] === email) {
+      console.log(email + " already exists within the database");
+      return false;
+    }
+  }
+  return true;
 };
