@@ -35,11 +35,6 @@ app.post("/urls", (req, res) => {//prefix longURL with http:// if not present, a
   res.redirect(`/urls/${shortURL}`);
 });
 
-app.post("/login", (req, res) => {
-  res.cookie('username', req.body.username);
-  res.redirect(301, "//localhost:8080/urls/");
-});
-
 app.post("/register", (req, res) => {
   const id = generateRandomString();
   if (!req.body.email && !req.body.password) {
@@ -61,14 +56,14 @@ app.listen(PORT, () => {
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { username: req.cookies['username'] };
+  let templateVars = {'user_id': users[req.cookies['user_id']]};
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies['username']
+    'user_id': users[req.cookies['user_id']]
   };
   res.render("urls_index", templateVars);
 });
@@ -86,7 +81,7 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: req.cookies['username']};
+  let templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], 'user_id': users[req.cookies['user_id']]};
   res.render("urls_show", templateVars);
 });
 
@@ -97,9 +92,24 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/register", (req, res) => {
   let templateVars = {
-    username: req.cookies['username']
+    'user_id': users[req.cookies['user_id']]
   };
   res.render("account_register", templateVars);
+});
+
+app.get("/login", (req, res) => {
+  let templateVars = { 'user_id': users[req.cookies['user_id']] };
+  res.render("account_login", templateVars);
+});
+
+app.post("/login", (req, res) => {
+  console.log(req.body.email);
+  console.log(emailLookUp(req.body.email));
+  if (emailLookUp(req.body.email).id === req.body.email && emailLookUp(req.body.email).password === req.body.password) {
+    res.cookie('user_id', emailLookUp(req.body.email).id);
+    res.redirect(301, "//localhost:8080/urls/");
+  } else res.sendStatus(403);
+
 });
 
 // Update
@@ -117,7 +127,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect(301, "//localhost:8080/urls/");
 });
 
@@ -145,4 +155,13 @@ const emailIsUnique = function(email) {
     }
   }
   return true;
+};
+
+const emailLookUp = function(email) {
+  for (let ids in users) {
+    if (users[ids]['email'] === email) {
+      return users[ids];
+    }
+  } console.log("Email unable to be found");
+  return false;
 };
