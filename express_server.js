@@ -40,6 +40,16 @@ app.post("/login", (req, res) => {
   res.redirect(301, "//localhost:8080/urls/");
 });
 
+app.post("/register", (req, res) => {
+  const id = generateRandomString();
+  users[id] = {
+    id,
+    email: req.body.email,
+    password: req.body.password
+  };
+  res.cookie('user_id', id);
+  res.redirect(301, "/urls");
+});
 // Read
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
