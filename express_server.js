@@ -9,8 +9,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: 'userRandomID'},
+  "9sm5xK": { longURL: "http://www.google.com", userID: 'user2RandomID'}
 };
 
 const users = {
@@ -60,14 +60,17 @@ app.get("/urls/new", (req, res) => {
     let templateVars = {'user_id': users[req.cookies['user_id']]};
     res.render("urls_new", templateVars);
   } else res.redirect("/login");
-
 });
 
 app.get("/urls", (req, res) => {
+  if (!users[req.cookies['user_id']]) {
+    res.send("<html><body>Please login to use our link shortening services</body></html>\n");
+  }
   let templateVars = {
     urls: urlDatabase,
     'user_id': users[req.cookies['user_id']]
   };
+  console.log(users[req.cookies['user_id']].id);
   res.render("urls_index", templateVars);
 });
 
@@ -165,3 +168,13 @@ const emailLookUp = function(email) {
   } console.log("Email unable to be found");
   return false;
 };
+
+const urlsForUser = function(id) {
+  for (let shortURL in urlDatabase) {
+    if (id === urlDatabase[shortURL]['userID']) {
+      console.log(urlDatabase[shortURL]['longURL']);
+      urlDatabase[shortURL]['longURL'];
+    }
+  }
+};
+
