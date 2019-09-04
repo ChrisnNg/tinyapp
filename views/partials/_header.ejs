@@ -12,14 +12,16 @@
       </div>
       
     </div class="float-right">
-    <% if (!username) { %>
-      <form method="POST" action="/login">
-        <input type="text" name="username" placeholder="Username">
+    <% if (!user_id) { %>
+      <form method="GET" action="/login">
         <button type="submit" class="btn-success btn-outline-dark">Log in</button>
+      </form>
+      <form method="GET" action="/register">
+        <button type="submit" class="btn-success btn-outline-dark">Register</button>
       </form>
     <% } else { %>
         <form method="POST" action="/logout">
-          <label for="username">Logged In As: <%= username %>!  <label>
+          <label for="username">Logged In As: <%= user_id.email %>!  <label>
           <button type="submit" class="btn-success btn-outline-dark">Logout</button>
         </form>
 

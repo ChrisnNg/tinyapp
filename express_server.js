@@ -103,13 +103,10 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  console.log(req.body.email);
-  console.log(emailLookUp(req.body.email));
-  if (emailLookUp(req.body.email).id === req.body.email && emailLookUp(req.body.email).password === req.body.password) {
+  if (emailLookUp(req.body.email).email === req.body.email && emailLookUp(req.body.email).password === req.body.password) {
     res.cookie('user_id', emailLookUp(req.body.email).id);
     res.redirect(301, "//localhost:8080/urls/");
   } else res.sendStatus(403);
-
 });
 
 // Update
