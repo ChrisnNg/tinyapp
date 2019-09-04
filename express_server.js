@@ -56,8 +56,11 @@ app.listen(PORT, () => {
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = {'user_id': users[req.cookies['user_id']]};
-  res.render("urls_new", templateVars);
+  if (users[req.cookies['user_id']]) {
+    let templateVars = {'user_id': users[req.cookies['user_id']]};
+    res.render("urls_new", templateVars);
+  } else res.redirect("/login");
+
 });
 
 app.get("/urls", (req, res) => {
