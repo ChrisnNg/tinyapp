@@ -74,8 +74,12 @@ app.post("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  const username = req.body.username;
   res.cookie('username', req.body.username);
+  res.redirect(301, "//localhost:8080/urls/");
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie('username');
   res.redirect(301, "//localhost:8080/urls/");
 });
 
