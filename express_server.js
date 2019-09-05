@@ -98,8 +98,20 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]['longURL'], 'user_id': users[req.session.user_id], 'url_id':urlDatabase[req.params.shortURL]['userID']};
-  res.render("urls_show", templateVars);
+  const shortURL = req.params.shortURL;
+  let willRender = true;
+  for (let url in urlDatabase) {
+    if (url === req.params.shortURL) {
+      let templateVars = {shortURL, longURL: urlDatabase[shortURL]['longURL'], 'user_id': users[req.session.user_id], 'url_id':urlDatabase[shortURL]['userID']};
+      res.render("urls_show", templateVars);
+      willRender = false;
+      break;
+    }
+  }
+  if (willRender) {
+    let templateVars = {'user_id': users[req.session.user_id]};
+    res.render("errorpage", templateVars);
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {
