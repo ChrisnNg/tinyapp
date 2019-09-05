@@ -3,6 +3,7 @@ const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 app.use(cookieParser());
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -27,6 +28,10 @@ const users = {
 };
 
 // !Create
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
+});
+
 app.post("/urls", (req, res) => {//prefix longURL with http:// if not present, and adds new key and value into urlDatabase
   let longURL = "";
   !req.body.longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : longURL = req.body.longURL;
@@ -46,17 +51,15 @@ app.post("/register", (req, res) => {
     users[id] = {
       id,
       email: req.body.email,
-      password: req.body.password
+      hashedPassword: bcrypt.hashSync(req.body.password, 10)
     };
+    console.log(users[id]);
     res.cookie('user_id', id);
     res.redirect(301, "/urls");
   } else res.sendStatus(400);
 });
 
 // !Read
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
 
 app.get("/urls/new", (req, res) => {
   if (users[req.cookies['user_id']]) {
@@ -111,14 +114,14 @@ app.get("/login", (req, res) => {
   res.render("account_login", templateVars);
 });
 
+// !Update
 app.post("/login", (req, res) => {
-  if (emailLookUp(req.body.email).email === req.body.email && emailLookUp(req.body.email).password === req.body.password) {
+  if (emailLookUp(req.body.email).email === req.body.email && bcrypt.compareSync(req.body.password, emailLookUp(req.body.email).hashedPassword)) {
     res.cookie('user_id', emailLookUp(req.body.email).id);
     res.redirect(301, "//localhost:8080/urls/");
   } else res.sendStatus(403);
 });
 
-// !Update
 app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const newLongURL = req.body.newLongURL;
