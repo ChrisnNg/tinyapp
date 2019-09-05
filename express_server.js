@@ -52,18 +52,20 @@ app.post("/register", (req, res) => {
     'user_id': users[req.session.user_id],
     emptyvalue: false
   };
-  if (!req.body.email && !req.body.password) {
-    templateVars['emptyvalue'] = true;
-    res.render("account_register_error", templateVars);
-  } else if (!getUserByEmail(req.body.email, users)) {
-    users[id] = {
-      id,
-      email: req.body.email,
-      hashedPassword: bcrypt.hashSync(req.body.password, 10)
-    };
-    req.session.user_id = id;
-    res.redirect(301, "/urls");
+  if (req.body.email && req.body.password.length > 0) {
+    if (!getUserByEmail(req.body.email, users)) {
+      users[id] = {
+        id,
+        email: req.body.email,
+        hashedPassword: bcrypt.hashSync(req.body.password, 10)
+      };
+      req.session.user_id = id;
+      res.redirect(301, "/urls");
+    }   else {
+      res.render("account_register_error", templateVars);
+    }
   } else {
+    templateVars['emptyvalue'] = true;
     res.render("account_register_error", templateVars);
   }
 });
