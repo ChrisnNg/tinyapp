@@ -42,7 +42,6 @@ app.post("/urls", (req, res) => {//prefix longURL with http:// if not present, a
   !req.body.longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : longURL = req.body.longURL;
   let shortURL = generateRandomString();
   const userID = req.session.user_id;
-  console.log(userID);
   urlDatabase[shortURL] = { longURL, userID };
   res.redirect(`/urls/${shortURL}`);
 });
@@ -58,7 +57,6 @@ app.post("/register", (req, res) => {
       email: req.body.email,
       hashedPassword: bcrypt.hashSync(req.body.password, 10)
     };
-    console.log(users[id]);
     req.session.user_id = id;
     res.redirect(301, "/urls");
   } else res.sendStatus(400);
