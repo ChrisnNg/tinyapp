@@ -52,6 +52,7 @@ app.post("/register", (req, res) => {
     res.redirect(301, "/urls");
   } else res.sendStatus(400);
 });
+
 // !Read
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
@@ -89,7 +90,6 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const userObject = users[req.cookies['user_id']];
   let templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]['longURL'], 'user_id': users[req.cookies['user_id']], 'url_id':urlDatabase[req.params.shortURL]['userID']};
   res.render("urls_show", templateVars);
 });
@@ -123,8 +123,10 @@ app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const newLongURL = req.body.newLongURL;
   const userID = req.cookies['user_id'];
-  urlDatabase[shortURL] = { longURL: newLongURL, userID };
-  res.redirect(301, "//localhost:8080/urls/");
+  if (userID === urlDatabase[req.params.shortURL]['userID']) {
+    urlDatabase[shortURL] = { longURL: newLongURL, userID };
+    res.redirect(301, "//localhost:8080/urls/");
+  } else res.sendStatus(401);
 });
 
 //!Delete
@@ -187,4 +189,3 @@ const urlsForUser = function(id) {
   return userUrls;
 };
 urlsForUser('user2RandomID');
-
