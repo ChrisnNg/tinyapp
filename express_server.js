@@ -129,8 +129,12 @@ app.post("/urls/:shortURL", (req, res) => {
 
 //!Delete
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect(301, "//localhost:8080/urls/");
+  const userID = req.cookies['user_id'];
+  if (userID === urlDatabase[req.params.shortURL]['userID']) {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect(301, "//localhost:8080/urls/");
+  } else res.sendStatus(401);
+
 });
 
 app.post("/logout", (req, res) => {
