@@ -63,10 +63,14 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  const userObject = users[req.cookies['user_id']];
   let templateVars = {
     urls: urlDatabase,
     'user_id': users[req.cookies['user_id']]
   };
+  if (userObject) {
+    templateVars['urls'] = urlsForUser(userObject.id);
+  }
   res.render("urls_index", templateVars);
 });
 
@@ -166,11 +170,14 @@ const emailLookUp = function(email) {
 };
 
 const urlsForUser = function(id) {
+  let userUrls = {};
   for (let shortURL in urlDatabase) {
     if (id === urlDatabase[shortURL]['userID']) {
-      console.log(urlDatabase[shortURL]['longURL']);
-      urlDatabase[shortURL]['longURL'];
+      userUrls[shortURL] = urlDatabase[shortURL]['longURL'];
+      console.log(userUrls);
     }
   }
+  return userUrls;
 };
+urlsForUser('user2RandomID');
 
