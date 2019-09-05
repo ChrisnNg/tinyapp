@@ -11,6 +11,11 @@
     <% include partials/_header.ejs %>
   </header>
   <font style="margin-left: 15px;" size="6" >Register</font>
+  <% if (emptyvalue) { %>
+    <br><font style="margin-left: 15px;" size="3" color="red">Email or Password cannot be blank.</font>
+    <% } else { %>
+      <br><font style="margin-left: 15px;" size="3" color="red">Email has already been used.</font>
+      <% } %>
   <form method="POST" action="/register">
     <font style="margin-left: 15px;" size="4" >Email</font><br>
     <input style="margin-left: 15px;" type="text" type="email" name="email" placeholder="Email"><br>

@@ -48,10 +48,14 @@ app.post("/urls", (req, res) => {//prefix longURL with http:// if not present, a
 
 app.post("/register", (req, res) => {
   const id = generateRandomString();
+  let templateVars = {
+    'user_id': users[req.session.user_id],
+    emptyvalue: false
+  };
   if (!req.body.email && !req.body.password) {
-    res.sendStatus(400);
-  }
-  if (!getUserByEmail(req.body.email, users)) {
+    templateVars['emptyvalue'] = true;
+    res.render("account_register_error", templateVars);
+  } else if (!getUserByEmail(req.body.email, users)) {
     users[id] = {
       id,
       email: req.body.email,
@@ -59,7 +63,9 @@ app.post("/register", (req, res) => {
     };
     req.session.user_id = id;
     res.redirect(301, "/urls");
-  } else res.sendStatus(400);
+  } else {
+    res.render("account_register_error", templateVars);
+  }
 });
 
 // !Read
