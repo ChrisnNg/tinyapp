@@ -14,10 +14,10 @@
     </div class="float-right">
     <% if (!user_id) { %>
       <form method="GET" action="/login">
-        <button type="submit" class="btn-success btn-outline-dark">Log in</button>
+        <button type="submit" class="btn-info btn-outline-dark btn" style="margin-right: 10px;">Log in</button>
       </form>
       <form method="GET" action="/register">
-        <button type="submit" class="btn-success btn-outline-dark">Register</button>
+        <button type="submit" class="btn-success btn-outline-dark btn">Register</button>
       </form>
     <% } else { %>
         <form method="POST" action="/logout">
