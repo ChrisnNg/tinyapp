@@ -39,7 +39,7 @@ app.listen(PORT, () => {
 
 app.post("/urls", (req, res) => {//prefix longURL with http:// if not present, and adds new key and value into urlDatabase
   let longURL = "";
-  !req.body.longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : longURL = req.body.longURL;
+  !(req.body.longURL.startsWith('http://')) ? longURL = 'http://' + req.body.longURL : longURL = req.body.longURL;
   let shortURL = generateRandomString();
   const userID = req.session.user_id;
   urlDatabase[shortURL] = { longURL, userID };
