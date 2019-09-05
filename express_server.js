@@ -84,7 +84,9 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  if (users[req.session.user_id]) {
+    res.redirect("/urls");
+  } else res.redirect("/login");
 });
 
 app.get("/urls.json", (req, res) => {
