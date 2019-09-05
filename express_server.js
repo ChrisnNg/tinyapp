@@ -117,7 +117,7 @@ app.get("/urls/:shortURL", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   let willRender = true;
-  
+
   for (let url in urlDatabase) {
     if (url === shortURL) {
       let longURL = urlDatabase[shortURL]['longURL'];
@@ -132,6 +132,9 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
+  if (req.session.user_id) {
+    res.redirect("/urls");
+  }
   let templateVars = {
     'user_id': users[req.session.user_id]
   };
@@ -139,6 +142,9 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+  if (req.session.user_id) {
+    res.redirect("/urls");
+  }
   let templateVars = { 'user_id': users[req.session.user_id] };
   res.render("account_login", templateVars);
 });
@@ -147,7 +153,7 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   if (getUserByEmail(req.body.email, users).email === req.body.email && bcrypt.compareSync(req.body.password, getUserByEmail(req.body.email, users).hashedPassword)) {
     req.session.user_id = getUserByEmail(req.body.email, users).id;
-    res.redirect(301, "//localhost:8080/urls/");
+    res.redirect(301, "/urls");
   } else res.sendStatus(403);
 });
 
@@ -157,7 +163,7 @@ app.post("/urls/:shortURL", (req, res) => {
   const userID = req.session.user_id;
   if (userID === urlDatabase[req.params.shortURL]['userID']) {
     urlDatabase[shortURL] = { longURL: newLongURL, userID };
-    res.redirect(301, "//localhost:8080/urls/");
+    res.redirect(301, "/urls");
   } else res.sendStatus(401);
 });
 
@@ -166,12 +172,12 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   const userID = req.session.user_id;
   if (userID === urlDatabase[req.params.shortURL]['userID']) {
     delete urlDatabase[req.params.shortURL];
-    res.redirect(301, "//localhost:8080/urls/");
+    res.redirect(301, "/urls");
   } else res.sendStatus(401);
 
 });
 
 app.post("/logout", (req, res) => {
   req.session.user_id = null;
-  res.redirect(301, "//localhost:8080/urls/");
+  res.redirect(301, "/urls");
 });
