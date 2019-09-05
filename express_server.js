@@ -87,7 +87,8 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], 'user_id': users[req.cookies['user_id']]};
+  const userObject = users[req.cookies['user_id']];
+  let templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]['longURL'], 'user_id': users[req.cookies['user_id']], 'url_id':urlDatabase[req.params.shortURL]['userID']};
   res.render("urls_show", templateVars);
 });
 
