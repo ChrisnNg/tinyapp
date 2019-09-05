@@ -63,14 +63,10 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  if (!users[req.cookies['user_id']]) {
-    res.send("<html><body>Please login to use our link shortening services</body></html>\n");
-  }
   let templateVars = {
     urls: urlDatabase,
     'user_id': users[req.cookies['user_id']]
   };
-  console.log(users[req.cookies['user_id']].id);
   res.render("urls_index", templateVars);
 });
 
