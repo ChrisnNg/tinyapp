@@ -101,7 +101,7 @@ app.get("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   let willRender = true;
   for (let url in urlDatabase) {
-    if (url === req.params.shortURL) {
+    if (url === shortURL) {
       let templateVars = {shortURL, longURL: urlDatabase[shortURL]['longURL'], 'user_id': users[req.session.user_id], 'url_id':urlDatabase[shortURL]['userID']};
       res.render("urls_show", templateVars);
       willRender = false;
@@ -115,8 +115,20 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL]['longURL'];
-  res.redirect(307, longURL);
+  const shortURL = req.params.shortURL;
+  let willRender = true;
+  
+  for (let url in urlDatabase) {
+    if (url === shortURL) {
+      let longURL = urlDatabase[shortURL]['longURL'];
+      res.redirect(307, longURL);
+    }
+  }
+  if (willRender) {
+    let templateVars = {'user_id': users[req.session.user_id]};
+    res.render("errorpage", templateVars);
+  }
+
 });
 
 app.get("/register", (req, res) => {
