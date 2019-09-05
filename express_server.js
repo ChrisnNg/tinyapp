@@ -119,8 +119,8 @@ app.get("/login", (req, res) => {
 
 // !Update
 app.post("/login", (req, res) => {
-  if (emailLookUp(req.body.email).email === req.body.email && bcrypt.compareSync(req.body.password, emailLookUp(req.body.email).hashedPassword)) {
-    req.session.user_id = emailLookUp(req.body.email).id;
+  if (getUserByEmail(req.body.email, users).email === req.body.email && bcrypt.compareSync(req.body.password, getUserByEmail(req.body.email, users).hashedPassword)) {
+    req.session.user_id = getUserByEmail(req.body.email, users).id;
     res.redirect(301, "//localhost:8080/urls/");
   } else res.sendStatus(403);
 });
@@ -176,10 +176,10 @@ const emailIsUnique = function(email) {
   return true;
 };
 
-const emailLookUp = function(email) {
-  for (let ids in users) {
-    if (users[ids]['email'] === email) {
-      return users[ids];
+const getUserByEmail = function(email, database) {
+  for (let ids in database) {
+    if (database[ids]['email'] === email) {
+      return database[ids];
     }
   } console.log("Email unable to be found");
   return false;
