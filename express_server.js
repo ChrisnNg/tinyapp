@@ -31,7 +31,9 @@ app.post("/urls", (req, res) => {//prefix longURL with http:// if not present, a
   let longURL = "";
   !req.body.longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : longURL = req.body.longURL;
   let shortURL = generateRandomString();
-  urlDatabase[shortURL] = longURL;
+  const userID = req.cookies['user_id'];
+  console.log(userID);
+  urlDatabase[shortURL] = { longURL, userID };
   res.redirect(`/urls/${shortURL}`);
 });
 
