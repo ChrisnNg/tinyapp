@@ -4,7 +4,7 @@ const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
-const { getUserByEmail } = require("./helpers");
+const { getUserByEmail, generateRandomString, urlsForUser } = require("./helpers");
 
 app.use(cookieSession({
   name: 'session',
@@ -78,7 +78,7 @@ app.get("/urls", (req, res) => {
     'user_id': users[req.session.user_id]
   };
   if (userObject) {
-    templateVars['urls'] = urlsForUser(userObject.id);
+    templateVars['urls'] = urlsForUser(userObject.id, urlDatabase);
   }
   res.render("urls_index", templateVars);
 });
@@ -149,31 +149,3 @@ app.post("/logout", (req, res) => {
   req.session.user_id = null;
   res.redirect(301, "//localhost:8080/urls/");
 });
-
-const getRandomInt = function(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-};
-
-const generateRandomString = function() {
-  let randomString = "";
-  let arrayCharc = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
-  let i = 0;
-
-  while (i < 6) {
-    randomString += arrayCharc[getRandomInt(61)];
-    i++;
-  }
-  return randomString;
-};
-
-
-const urlsForUser = function(id) {
-  let userUrls = {};
-  for (let shortURL in urlDatabase) {
-    if (id === urlDatabase[shortURL]['userID']) {
-      userUrls[shortURL] = urlDatabase[shortURL]['longURL'];
-    }
-  }
-  return userUrls;
-};
-urlsForUser('user2RandomID');
