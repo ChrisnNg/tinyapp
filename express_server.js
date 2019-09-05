@@ -26,7 +26,7 @@ const users = {
   }
 };
 
-// Create
+// !Create
 app.post("/urls", (req, res) => {//prefix longURL with http:// if not present, and adds new key and value into urlDatabase
   let longURL = "";
   !req.body.longURL.startsWith('http://') ? longURL = 'http://' + req.body.longURL : longURL = req.body.longURL;
@@ -52,7 +52,7 @@ app.post("/register", (req, res) => {
     res.redirect(301, "/urls");
   } else res.sendStatus(400);
 });
-// Read
+// !Read
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
@@ -118,15 +118,16 @@ app.post("/login", (req, res) => {
   } else res.sendStatus(403);
 });
 
-// Update
+// !Update
 app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const newLongURL = req.body.newLongURL;
-  urlDatabase[shortURL] = newLongURL;
+  const userID = req.cookies['user_id'];
+  urlDatabase[shortURL] = { longURL: newLongURL, userID };
   res.redirect(301, "//localhost:8080/urls/");
 });
 
-//Delete
+//!Delete
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect(301, "//localhost:8080/urls/");
