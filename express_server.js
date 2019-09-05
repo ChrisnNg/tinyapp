@@ -4,6 +4,8 @@ const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
+const getUserByEmail = require("./helpers");
+
 app.use(cookieSession({
   name: 'session',
   keys: ['tinyapp']
@@ -166,14 +168,6 @@ const generateRandomString = function() {
   return randomString;
 };
 
-const getUserByEmail = function(email, database) {
-  for (let ids in database) {
-    if (database[ids]['email'] === email) {
-      return database[ids];
-    }
-  } console.log("Email unable to be found");
-  return false;
-};
 
 const urlsForUser = function(id) {
   let userUrls = {};
