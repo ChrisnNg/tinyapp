@@ -95,7 +95,7 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
+  let longURL = urlDatabase[req.params.shortURL]['longURL'];
   res.redirect(307, longURL);
 });
 
@@ -178,7 +178,6 @@ const urlsForUser = function(id) {
   for (let shortURL in urlDatabase) {
     if (id === urlDatabase[shortURL]['userID']) {
       userUrls[shortURL] = urlDatabase[shortURL]['longURL'];
-      console.log(userUrls);
     }
   }
   return userUrls;
