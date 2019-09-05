@@ -50,7 +50,7 @@ app.post("/register", (req, res) => {
   if (!req.body.email && !req.body.password) {
     res.sendStatus(400);
   }
-  if (emailIsUnique(req.body.email)) {
+  if (!getUserByEmail(req.body.email, users)) {
     users[id] = {
       id,
       email: req.body.email,
@@ -164,16 +164,6 @@ const generateRandomString = function() {
     i++;
   }
   return randomString;
-};
-
-const emailIsUnique = function(email) {
-  for (let ids in users) {
-    if (users[ids]['email'] === email) {
-      console.log(email + " already exists within the database");
-      return false;
-    }
-  }
-  return true;
 };
 
 const getUserByEmail = function(email, database) {
