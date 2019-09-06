@@ -3,8 +3,7 @@ const getUserByEmail = function(email, database) {
     if (database[ids]['email'] === email) {
       return database[ids];
     }
-  } console.log("Email unable to be found");
-  return false;
+  } return false;
 };
 
 const getRandomInt = function(max) {
