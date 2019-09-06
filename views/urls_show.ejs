@@ -13,8 +13,7 @@
   <h3>My URLs</h3>
   <%   if (!user_id) { %>
     <html><body>Please login or register to use our link shortening services</body></html>
-  <% } else { %>
-    <% if (user_id.id == url_id) { %>
+  <% } else if (user_id.id == url_id) { %>
   <div class="card text-center">
       <div class="card-header"></div>
       <div class="card-body">
@@ -32,8 +31,8 @@
         </form>
     </div>
   </div>
-  <% } else %>
-    <html><body>Please login into the correct account to view this link</body></html>
+  <% } else { %>
+    <html><body>Please login into the correct account to view & edit this link</body></html>
   <% } %>
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
