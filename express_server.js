@@ -162,7 +162,10 @@ app.post("/login", (req, res) => {
   if (getUserByEmail(req.body.email, users).email === req.body.email && bcrypt.compareSync(req.body.password, getUserByEmail(req.body.email, users).hashedPassword)) {
     req.session.user_id = getUserByEmail(req.body.email, users).id;
     res.redirect(301, "/urls");
-  } else res.sendStatus(403);
+  } else {
+    let templateVars = { 'user_id': users[req.session.user_id], loginFailed: true };
+    res.render("account_login", templateVars);
+  }
 });
 
 app.post("/urls/:shortURL", (req, res) => {

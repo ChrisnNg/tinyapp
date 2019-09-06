@@ -12,6 +12,9 @@
   </header>
   <h3 style="margin-top: 15px; margin-left: 15px;"><b>Login</b></h3>
   <form method="POST" action="/login">
+    <% if(loginFailed) { %>
+      <h6 style="margin-left: 15px;"><font color="red">Email address or password is incorrect.</font></h6>
+      <% } %>
     <h6 style="margin-left: 15px;">Email address</h6>
     <input style="margin-left: 15px;" type="text" type="email" name="email" placeholder=" Email">
     <h6 style="margin-top: 10px; margin-left: 15px;"">Password</h6>
